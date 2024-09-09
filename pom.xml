@@ -34,13 +34,14 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.34</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.PowerNukkitX</groupId>
             <artifactId>PowerNukkitX</artifactId>
             <version>master-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.cloudburstmc.netty</groupId>
@@ -57,6 +58,7 @@
             <groupId>dev.waterdog.waterdogpe</groupId>
             <artifactId>waterdog</artifactId>
             <version>2.0.3-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

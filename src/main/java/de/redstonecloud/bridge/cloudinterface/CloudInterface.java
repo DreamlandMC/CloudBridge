@@ -64,7 +64,7 @@ public class CloudInterface {
     }
 
     public void shutdown() {
-        broker.getPublisher().shutdown();
-        broker.getSubscriber().shutdown();
+        broker.getPublisher().close();
+        broker.getSubscriber().close();
     }
 }

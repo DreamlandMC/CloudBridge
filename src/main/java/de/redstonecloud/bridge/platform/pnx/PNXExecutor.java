@@ -3,20 +3,18 @@ package de.redstonecloud.bridge.platform.pnx;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.scheduler.Task;
+import com.google.common.net.HostAndPort;
 import de.redstonecloud.api.components.ICloudPlayer;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeExecutor;
+import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;
 
 import java.util.Objects;
 
 public class PNXExecutor implements BridgeExecutor {
     private static Server server = Server.getInstance();
 
-    public void addServer() {}
-
-    public void removeServer() {}
-
     public Player getPlayerByCloudPlayer(ICloudPlayer player) {
-        return server.getOnlinePlayers().values().stream().filter(p -> p.getName().equals(player.getName())).toArray(Player[]::new)[0];
+        return server.getOnlinePlayers().values().stream().filter(p -> p.getName().equalsIgnoreCase(player.getName())).toArray(Player[]::new)[0];
     }
 
     public void sendMessage(ICloudPlayer cloudPlayer, String message) {
@@ -41,5 +39,19 @@ public class PNXExecutor implements BridgeExecutor {
                 code.run();
             }
         }, tickDelay);
+    }
+
+
+
+    public void addServer(String name, HostAndPort address) {}
+
+    public void removeServer(String name) {}
+
+    public boolean hasServer(String name) {
+        return false;
+    }
+
+    public BridgeServer determineServer(String serverName) {
+        return null;
     }
 }

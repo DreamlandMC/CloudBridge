@@ -1,4 +1,4 @@
-package de.redstonecloud.bridge;
+package de.redstonecloud.bridge.platform.pnx;
 
 import cn.nukkit.plugin.PluginBase;
 import de.redstonecloud.bridge.cloudinterface.CloudInterface;
@@ -13,7 +13,7 @@ public class PNXPlugin extends PluginBase {
 
     @Override
     public void onEnable() {
-        cloudInterface.start();
+        cloudInterface.start(new PNXExecutor());
     }
 
     @Override

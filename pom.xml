@@ -49,7 +49,29 @@
             <groupId>de.redstonecloud</groupId>
             <artifactId>api</artifactId>
             <version>0.1-beta</version>
+            <scope>compile</scope>
             <!-- ADD REPO -->
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputFile>target\${project.artifactId}-${project.version}-shaded.jar</outputFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

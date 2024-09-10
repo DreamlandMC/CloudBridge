@@ -29,6 +29,7 @@ public class WDPEExecutor implements BridgeExecutor {
 
     @Override
     public BridgeServer determineServer(String serverName) {
+        System.out.println("Determining server " + serverName);
         BridgeServer server = BridgeServer.readFromCache(serverName.toUpperCase());
         if(server == null) {
             if(hasServer(serverName)) removeServer(serverName);

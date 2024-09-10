@@ -2,6 +2,7 @@ package de.redstonecloud.bridge.cloudinterface;
 
 import com.google.common.net.HostAndPort;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import de.redstonecloud.api.components.ICloudServer;
 import de.redstonecloud.api.components.ServerStatus;
 import de.redstonecloud.api.redis.broker.Broker;
@@ -26,6 +27,8 @@ public class CloudInterface {
     public static Broker broker;
     public static boolean proxy;
 
+    @Getter public static JsonObject bridgeConfig;
+
     @Getter
     protected static BridgeExecutor executor;
 
@@ -37,8 +40,9 @@ public class CloudInterface {
 
     private CloudInterface() {
         String workingDir = new File(System.getProperty("user.dir")).getName();
+        bridgeConfig = new Gson().fromJson(System.getenv("BRIDGE_CFG"), JsonObject.class);
 
-        serverName = workingDir.toUpperCase();
+        serverName = workingDir.toLowerCase();
 
         cache = new Cache();
         broker = new Broker(serverName, serverName);

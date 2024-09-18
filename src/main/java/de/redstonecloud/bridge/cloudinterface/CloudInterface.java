@@ -60,7 +60,7 @@ public class CloudInterface {
 
         currentServerStartup = BridgeServer.readFromCache(serverName.toUpperCase());
         netty = new NettyClient(currentServerStartup.getName().toUpperCase(), NettyHelper.constructRegistry(), new EventRegistry());
-        netty.setPort(51123).bind();
+        netty.setPort(Integer.valueOf(System.getenv("NETTY_PORT"))).bind();
 
         proxy = currentServerStartup.isProxy();
 

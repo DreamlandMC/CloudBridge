@@ -5,6 +5,7 @@ import de.redstonecloud.api.components.ICloudPlayer;
 
 public interface BridgeExecutor {
     void sendMessage(ICloudPlayer cloudPlayer, String message);
+    void sendTitle(ICloudPlayer cloudPlayer, String title);
     void kick(ICloudPlayer player);
     void kick(ICloudPlayer player, String reason);
 
@@ -15,4 +16,5 @@ public interface BridgeExecutor {
     void removeServer(String name);
     boolean hasServer(String name);
     BridgeServer determineServer(String serverName);
+    void connect(ICloudPlayer player, String serverName);
 }

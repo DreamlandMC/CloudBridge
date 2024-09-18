@@ -9,16 +9,22 @@ import de.redstonecloud.bridge.cloudinterface.components.BridgeExecutor;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class PNXExecutor implements BridgeExecutor {
     private static Server server = Server.getInstance();
 
     public Player getPlayerByCloudPlayer(ICloudPlayer player) {
-        return server.getOnlinePlayers().values().stream().filter(p -> p.getName().equalsIgnoreCase(player.getName())).toArray(Player[]::new)[0];
+        return server.getPlayer(UUID.fromString(player.getUUID())).get();
     }
 
     public void sendMessage(ICloudPlayer cloudPlayer, String message) {
         Objects.requireNonNull(getPlayerByCloudPlayer(cloudPlayer)).sendMessage(message);
+    }
+
+    @Override
+    public void sendTitle(ICloudPlayer cloudPlayer, String title) {
+        getPlayerByCloudPlayer(cloudPlayer).sendTitle(title);
     }
 
     @Override
@@ -54,4 +60,6 @@ public class PNXExecutor implements BridgeExecutor {
     public BridgeServer determineServer(String serverName) {
         return null;
     }
+
+    public void connect(ICloudPlayer player, String name) {}
 }

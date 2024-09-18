@@ -11,6 +11,7 @@ import dev.waterdog.waterdogpe.scheduler.Task;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
+import java.util.UUID;
 
 public class WDPEExecutor implements BridgeExecutor {
     private static ProxyServer server = ProxyServer.getInstance();
@@ -41,12 +42,22 @@ public class WDPEExecutor implements BridgeExecutor {
         return server;
     }
 
+    @Override
+    public void connect(ICloudPlayer player, String serverName) {
+        getPlayerByCloudPlayer(player).connect(server.getServerInfo(serverName));
+    }
+
     public ProxiedPlayer getPlayerByCloudPlayer(ICloudPlayer player) {
-        return server.getPlayers().values().stream().filter(p -> p.getName().equalsIgnoreCase(player.getName())).toArray(ProxiedPlayer[]::new)[0];
+        return server.getPlayer(UUID.fromString(player.getUUID()));
     }
 
     public void sendMessage(ICloudPlayer cloudPlayer, String message) {
         Objects.requireNonNull(getPlayerByCloudPlayer(cloudPlayer)).sendMessage(message);
+    }
+
+    @Override
+    public void sendTitle(ICloudPlayer cloudPlayer, String title) {
+        getPlayerByCloudPlayer(cloudPlayer).sendTitle(title);
     }
 
     @Override

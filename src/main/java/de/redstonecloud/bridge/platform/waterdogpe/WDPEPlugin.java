@@ -6,6 +6,8 @@ import de.redstonecloud.bridge.platform.waterdogpe.commands.SendCommand;
 import de.redstonecloud.bridge.platform.waterdogpe.commands.ServerCommand;
 import de.redstonecloud.bridge.platform.waterdogpe.commands.ServersCommand;
 import dev.waterdog.waterdogpe.command.CommandMap;
+import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectedEvent;
+import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
 import dev.waterdog.waterdogpe.plugin.Plugin;
 
 public class WDPEPlugin extends Plugin {
@@ -33,6 +35,9 @@ public class WDPEPlugin extends Plugin {
         map.registerCommand(new HubCommand());
         map.registerCommand(new ServersCommand());
         map.registerCommand(new SendCommand());
+
+        this.getProxy().getEventManager().subscribe(PlayerLoginEvent.class, WDPEListener::onLogin);
+        this.getProxy().getEventManager().subscribe(PlayerDisconnectedEvent.class, WDPEListener::onDisconnect);
     }
 
     @Override

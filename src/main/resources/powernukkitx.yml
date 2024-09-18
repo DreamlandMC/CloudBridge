@@ -1,4 +1,3 @@
-#NEEDS TO BE PNX.YML BUT PNX DOESNT SUPPORT YET
 name: CloudBridge
 main: de.redstonecloud.bridge.platform.pnx.PNXPlugin
 load: STARTUP

@@ -3,15 +3,25 @@ package de.redstonecloud.bridge.cloudinterface;
 import com.google.common.net.HostAndPort;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import de.pierreschwang.nettypacket.event.EventRegistry;
 import de.redstonecloud.api.components.ICloudServer;
 import de.redstonecloud.api.components.ServerStatus;
+import de.redstonecloud.api.netty.NettyHelper;
+import de.redstonecloud.api.netty.client.NettyClient;
+import de.redstonecloud.api.netty.packet.communication.ClientAuthPacket;
+import de.redstonecloud.api.netty.packet.player.PlayerConnectPacket;
+import de.redstonecloud.api.netty.packet.player.PlayerDisconnectPacket;
 import de.redstonecloud.api.redis.broker.Broker;
 import de.redstonecloud.api.redis.broker.message.Message;
 import de.redstonecloud.api.redis.cache.Cache;
 import de.redstonecloud.bridge.cloudinterface.broker.BrokerHandler;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeExecutor;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;
+import de.redstonecloud.bridge.cloudinterface.netty.ProxyHandler;
 import lombok.Getter;
+import de.redstonecloud.api.netty.NettyHelper;
+import de.redstonecloud.api.netty.client.NettyClient;
+import de.redstonecloud.api.netty.packet.communication.ClientAuthPacket;
 
 import java.io.File;
 
@@ -24,6 +34,8 @@ public class CloudInterface {
 
     @Getter
     public static Cache cache;
+    @Getter
+    public static NettyClient netty;
     public static Broker broker;
     public static boolean proxy;
 
@@ -31,6 +43,8 @@ public class CloudInterface {
 
     @Getter
     protected static BridgeExecutor executor;
+
+    private BridgeServer currentServerStartup;
 
     public static CloudInterface getInstance() {
         if(INSTANCE == null) INSTANCE = new CloudInterface();
@@ -47,9 +61,11 @@ public class CloudInterface {
         cache = new Cache();
         broker = new Broker(serverName, serverName);
 
-        BridgeServer currentServer = BridgeServer.readFromCache(serverName.toUpperCase());
+        currentServerStartup = BridgeServer.readFromCache(serverName.toUpperCase());
+        netty = new NettyClient(currentServerStartup.getName().toUpperCase(), NettyHelper.constructRegistry(), new EventRegistry());
+        netty.setPort(51123).bind();
 
-        proxy = currentServer.isProxy();
+        proxy = currentServerStartup.isProxy();
 
     }
 
@@ -57,17 +73,35 @@ public class CloudInterface {
         executor = executorPlugin;
         broker.listen(serverName, BrokerHandler::handle);
 
-        //TODO: STARTUP OTHER THINGS
+        if(proxy) netty.getEventRegistry().registerEvents(new ProxyHandler(netty));
+
         executorPlugin.runDelayed(() -> {
-            new Message.Builder()
-                    .setTo("cloud")
-                    .append("comm:login")
-                    .build()
-                    .send();
+            ClientAuthPacket packet = new ClientAuthPacket();
+            packet.setClientId(currentServerStartup.getName().toUpperCase());
+
+            netty.sendPacket(packet);
         }, 20);
     }
 
     public void shutdown() {
         broker.shutdown();
+    }
+
+    public void playerLogin(String name, String uuid, String ip) {
+        PlayerConnectPacket pck = new PlayerConnectPacket()
+                .setPlayerName(name)
+                .setUuid(uuid)
+                .setIpAddress(ip)
+                .setServer(currentServerStartup.getName().toUpperCase());
+
+        netty.sendPacket(pck);
+    }
+
+    public void playerDisconnect(String uuid) {
+        PlayerDisconnectPacket pck = new PlayerDisconnectPacket()
+                .setUuid(uuid)
+                .setServer(currentServerStartup.getName().toUpperCase());
+
+        netty.sendPacket(pck);
     }
 }

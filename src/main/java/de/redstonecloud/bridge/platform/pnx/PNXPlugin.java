@@ -14,6 +14,7 @@ public class PNXPlugin extends PluginBase {
     @Override
     public void onEnable() {
         cloudInterface.start(new PNXExecutor());
+        this.getServer().getPluginManager().registerEvents(new PNXListener(), this);
     }
 
     @Override

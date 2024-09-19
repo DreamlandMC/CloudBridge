@@ -71,6 +71,16 @@ public class WDPEExecutor implements BridgeExecutor {
     }
 
     @Override
+    public void sendActionbar(ICloudPlayer player, String message) {
+        //WDPE can't do that :c
+    }
+
+    @Override
+    public void sendToast(ICloudPlayer player, String title, String message) {
+        getPlayerByCloudPlayer(player).sendToastMessage(title, message);
+    }
+
+    @Override
     public void runDelayed(Runnable code, int tickDelay) {
         server.getScheduler().scheduleDelayed(new Task() {
             @Override

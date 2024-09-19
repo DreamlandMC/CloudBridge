@@ -8,6 +8,8 @@ public interface BridgeExecutor {
     void sendTitle(ICloudPlayer cloudPlayer, String title);
     void kick(ICloudPlayer player);
     void kick(ICloudPlayer player, String reason);
+    void sendActionbar(ICloudPlayer player, String message);
+    void sendToast(ICloudPlayer player, String title, String message);
 
     void runDelayed(Runnable code, int tickDelay);
 

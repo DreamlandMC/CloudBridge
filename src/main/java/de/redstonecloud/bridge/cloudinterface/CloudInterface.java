@@ -5,12 +5,14 @@ import com.google.gson.JsonObject;
 import de.pierreschwang.nettypacket.event.EventRegistry;
 import de.redstonecloud.api.components.ICloudPlayer;
 import de.redstonecloud.api.components.ServerActions;
+import de.redstonecloud.api.components.ServerStatus;
 import de.redstonecloud.api.netty.NettyHelper;
 import de.redstonecloud.api.netty.client.NettyClient;
 import de.redstonecloud.api.netty.packet.communication.ClientAuthPacket;
 import de.redstonecloud.api.netty.packet.player.PlayerConnectPacket;
 import de.redstonecloud.api.netty.packet.player.PlayerDisconnectPacket;
 import de.redstonecloud.api.netty.packet.server.ServerActionRequest;
+import de.redstonecloud.api.netty.packet.server.ServerChangeStatusPacket;
 import de.redstonecloud.api.redis.broker.Broker;
 import de.redstonecloud.api.redis.cache.Cache;
 import de.redstonecloud.bridge.cloudinterface.broker.BrokerHandler;
@@ -132,5 +134,16 @@ public class CloudInterface {
                 .setServer(pl.getConnectedNetwork().getName())
                 .setPlayerUuid(pl.getUUID())
                 .setExtraData(new JSONObject().put("reason", reason)));
+    }
+
+    public void changeStatus(String server, ServerStatus newStatus) {
+        netty.sendPacket(new ServerChangeStatusPacket()
+                .setServer(server)
+                .setNewStatus(newStatus.name())
+        );
+    }
+
+    public void changeStatus(ServerStatus newStatus) {
+        changeStatus(currentServerStartup.getName().toUpperCase(), newStatus);
     }
 }

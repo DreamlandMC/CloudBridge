@@ -38,6 +38,16 @@ public class PNXExecutor implements BridgeExecutor {
     }
 
     @Override
+    public void sendActionbar(ICloudPlayer player, String message) {
+        getPlayerByCloudPlayer(player).sendActionBar(message);
+    }
+
+    @Override
+    public void sendToast(ICloudPlayer player, String title, String message) {
+        getPlayerByCloudPlayer(player).sendToast(title, message);
+    }
+
+    @Override
     public void runDelayed(Runnable code, int tickDelay) {
         server.getScheduler().scheduleDelayedTask(new Task() {
             @Override

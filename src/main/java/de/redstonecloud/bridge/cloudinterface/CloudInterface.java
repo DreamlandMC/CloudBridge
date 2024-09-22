@@ -35,6 +35,7 @@ public class CloudInterface {
     public static Cache cache;
     @Getter
     public static NettyClient netty;
+    @Getter
     public static Broker broker;
     public static boolean proxy;
 
@@ -112,12 +113,28 @@ public class CloudInterface {
                 .setExtraData(new JSONObject().put("message", message)));
     }
 
+    public void sendActionBar(ICloudPlayer pl, String message) {
+        netty.sendPacket(new ServerActionRequest()
+                .setAction(ServerActions.PLAYER_ACTIONBAR.name())
+                .setServer(pl.getConnectedNetwork().getName())
+                .setPlayerUuid(pl.getUUID())
+                .setExtraData(new JSONObject().put("message", message)));
+    }
+
     public void sendTitle(ICloudPlayer pl, String title) {
         netty.sendPacket(new ServerActionRequest()
                 .setAction(ServerActions.PLAYER_SEND_TITLE.name())
                 .setServer(pl.getConnectedNetwork().getName())
                 .setPlayerUuid(pl.getUUID())
                 .setExtraData(new JSONObject().put("title", title)));
+    }
+
+    public void sendToast(ICloudPlayer pl, String title, String content) {
+        netty.sendPacket(new ServerActionRequest()
+                .setAction(ServerActions.PLAYER_TOAST.name())
+                .setServer(pl.getConnectedNetwork().getName())
+                .setPlayerUuid(pl.getUUID())
+                .setExtraData(new JSONObject().put("title", title).put("content", content)));
     }
 
     public void connect(ICloudPlayer pl, String server) {

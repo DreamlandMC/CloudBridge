@@ -42,32 +42,32 @@ public class BridgePlayer implements ICloudPlayer {
 
     @Override
     public HostAndPort getAddress() {
-        return null;
+        return address;
     }
 
     @Override
     public ICloudServer getConnectedNetwork() {
-        return null;
+        return network;
     }
 
     @Override
     public ICloudServer getConnectedServer() {
-        return null;
+        return server;
     }
 
     @Override
     public String getUUID() {
-        return "";
+        return uuid;
     }
 
     @Override
     public void sendMessage(String message) {
-
+        CloudInterface.getInstance().sendMessage(this, message);
     }
 
     @Override
     public void connect(String server) {
-
+        CloudInterface.getInstance().connect(this, server);
     }
 
     @Override
@@ -77,6 +77,6 @@ public class BridgePlayer implements ICloudPlayer {
 
     @Override
     public String getName() {
-        return "";
+        return name;
     }
 }

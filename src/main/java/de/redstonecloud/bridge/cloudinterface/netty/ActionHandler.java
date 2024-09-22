@@ -23,7 +23,7 @@ public class ActionHandler {
             case PLAYER_SEND_MESSAGE -> ex.sendMessage(BridgePlayer.readFromCache(packet.getPlayerUuid()), packet.getExtraData().getString("message"));
             case PLAYER_SEND_TITLE -> ex.sendTitle(BridgePlayer.readFromCache(packet.getPlayerUuid()), packet.getExtraData().getString("title"));
             case PLAYER_ACTIONBAR -> ex.sendActionbar(BridgePlayer.readFromCache(packet.getPlayerUuid()), packet.getExtraData().getString("message"));
-            case PLAYER_TOAST -> ex.sendToast(BridgePlayer.readFromCache(packet.getPlayerUuid()), packet.getExtraData().getString("title"), packet.getExtraData().getString("title"));
+            case PLAYER_TOAST -> ex.sendToast(BridgePlayer.readFromCache(packet.getPlayerUuid()), packet.getExtraData().getString("title"), packet.getExtraData().getString("content"));
 
             case PLAYER_CONNECT -> ex.connect(BridgePlayer.readFromCache(packet.getPlayerUuid()), packet.getExtraData().getString("server"));
             default -> {}

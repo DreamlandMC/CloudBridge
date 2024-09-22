@@ -19,6 +19,7 @@ import de.redstonecloud.bridge.cloudinterface.broker.BrokerHandler;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeExecutor;
 import de.redstonecloud.bridge.cloudinterface.components.BridgePlayer;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;
+import de.redstonecloud.bridge.cloudinterface.netty.ActionHandler;
 import de.redstonecloud.bridge.cloudinterface.netty.ProxyHandler;
 import lombok.Getter;
 import org.json.JSONObject;
@@ -75,6 +76,7 @@ public class CloudInterface {
         broker.listen(serverName, BrokerHandler::handle);
 
         if(proxy) netty.getEventRegistry().registerEvents(new ProxyHandler(netty));
+        netty.getEventRegistry().registerEvents(new ActionHandler(netty));
 
         executorPlugin.runDelayed(() -> {
             ClientAuthPacket packet = new ClientAuthPacket();

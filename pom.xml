@@ -62,11 +62,10 @@
         </dependency>
 
         <dependency>
-            <groupId>de.redstonecloud</groupId>
+            <groupId>com.github.RedstoneCloud.RedstoneCloud</groupId>
             <artifactId>api</artifactId>
-            <version>0.1-beta</version>
+            <version>main-SNAPSHOT</version>
             <scope>compile</scope>
-            <!-- ADD REPO -->
         </dependency>
     </dependencies>
 

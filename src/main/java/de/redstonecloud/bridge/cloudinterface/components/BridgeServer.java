@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public class BridgeServer implements ICloudServer {
     public static BridgeServer readFromCache(String serverName) {
-        String cachedData = CloudInterface.getCache().get("server:" + serverName);
+        String cachedData = CloudInterface.getCache().get("server:" + serverName.toUpperCase());
 
         if(cachedData == null ||cachedData.isEmpty()) return null;
 

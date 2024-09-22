@@ -17,6 +17,7 @@ import de.redstonecloud.api.redis.broker.Broker;
 import de.redstonecloud.api.redis.cache.Cache;
 import de.redstonecloud.bridge.cloudinterface.broker.BrokerHandler;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeExecutor;
+import de.redstonecloud.bridge.cloudinterface.components.BridgePlayer;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;
 import de.redstonecloud.bridge.cloudinterface.netty.ProxyHandler;
 import lombok.Getter;
@@ -105,7 +106,7 @@ public class CloudInterface {
         netty.sendPacket(pck);
     }
 
-    public void sendMessage(ICloudPlayer pl, String message) {
+    public void sendMessage(BridgePlayer pl, String message) {
         netty.sendPacket(new ServerActionRequest()
                 .setAction(ServerActions.PLAYER_SEND_MESSAGE.name())
                 .setServer(pl.getConnectedNetwork().getName())
@@ -113,7 +114,7 @@ public class CloudInterface {
                 .setExtraData(new JSONObject().put("message", message)));
     }
 
-    public void sendActionBar(ICloudPlayer pl, String message) {
+    public void sendActionBar(BridgePlayer pl, String message) {
         netty.sendPacket(new ServerActionRequest()
                 .setAction(ServerActions.PLAYER_ACTIONBAR.name())
                 .setServer(pl.getConnectedNetwork().getName())
@@ -121,7 +122,7 @@ public class CloudInterface {
                 .setExtraData(new JSONObject().put("message", message)));
     }
 
-    public void sendTitle(ICloudPlayer pl, String title) {
+    public void sendTitle(BridgePlayer pl, String title) {
         netty.sendPacket(new ServerActionRequest()
                 .setAction(ServerActions.PLAYER_SEND_TITLE.name())
                 .setServer(pl.getConnectedNetwork().getName())
@@ -129,7 +130,7 @@ public class CloudInterface {
                 .setExtraData(new JSONObject().put("title", title)));
     }
 
-    public void sendToast(ICloudPlayer pl, String title, String content) {
+    public void sendToast(BridgePlayer pl, String title, String content) {
         netty.sendPacket(new ServerActionRequest()
                 .setAction(ServerActions.PLAYER_TOAST.name())
                 .setServer(pl.getConnectedNetwork().getName())
@@ -137,7 +138,7 @@ public class CloudInterface {
                 .setExtraData(new JSONObject().put("title", title).put("content", content)));
     }
 
-    public void connect(ICloudPlayer pl, String server) {
+    public void connect(BridgePlayer pl, String server) {
         netty.sendPacket(new ServerActionRequest()
                 .setAction(ServerActions.PLAYER_CONNECT.name())
                 .setServer(pl.getConnectedNetwork().getName())
@@ -145,7 +146,7 @@ public class CloudInterface {
                 .setExtraData(new JSONObject().put("server", server)));
     }
 
-    public void kick(ICloudPlayer pl, String reason) {
+    public void kick(BridgePlayer pl, String reason) {
         netty.sendPacket(new ServerActionRequest()
                 .setAction(ServerActions.PLAYER_KICK.name())
                 .setServer(pl.getConnectedNetwork().getName())

@@ -61,7 +61,24 @@ public class CloudInterface {
         serverName = workingDir.toLowerCase();
 
         cache = new Cache();
-        broker = new Broker(serverName, serverName);
+
+        String[] parts = serverName.split("-");
+        String[] result = new String[parts.length + 1];
+
+        StringBuilder pattern = new StringBuilder();
+
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) {
+                pattern.append("-");
+            }
+            pattern.append(parts[i]);
+            result[i + 1] = pattern.toString() + "-*";
+        }
+
+        result[0] = "*";  // First element is always "*"
+        result[result.length - 1] = serverName;
+
+        broker = new Broker(serverName, result);
 
         currentServerStartup = BridgeServer.readFromCache(serverName.toUpperCase());
         netty = new NettyClient(currentServerStartup.getName().toUpperCase(), NettyHelper.constructRegistry(), new EventRegistry());

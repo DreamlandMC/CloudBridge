@@ -43,6 +43,8 @@ public class WDPEExecutor implements BridgeExecutor {
             return null;
         }
 
+        if(server.isProxy()) return null;
+
         if(!hasServer(server.getName()) || !hasSameServer(server)) addServer(server.getName(), server.getAddress());
 
         return server;

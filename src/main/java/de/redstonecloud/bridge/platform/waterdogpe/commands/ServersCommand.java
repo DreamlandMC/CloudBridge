@@ -1,6 +1,5 @@
 package de.redstonecloud.bridge.platform.waterdogpe.commands;
 
-import de.redstonecloud.api.encryption.KeyManager;
 import de.redstonecloud.api.redis.cache.Cache;
 import de.redstonecloud.bridge.cloudinterface.CloudInterface;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;

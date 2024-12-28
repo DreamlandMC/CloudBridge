@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.redstonecloud.api.components.ICloudPlayer;
 import de.redstonecloud.api.components.ICloudServer;
-import de.redstonecloud.api.components.ServerStatus;
 import de.redstonecloud.bridge.cloudinterface.CloudInterface;
 import lombok.Builder;
 import lombok.Getter;

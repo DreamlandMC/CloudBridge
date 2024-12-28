@@ -1,9 +1,7 @@
 package de.redstonecloud.bridge.platform.waterdogpe;
 
-import de.pierreschwang.nettypacket.response.RespondingPacket;
-import de.redstonecloud.api.netty.packet.template.BestTemplateResultPacket;
-import de.redstonecloud.api.netty.packet.template.GetBestTemplatePacket;
-import de.redstonecloud.api.redis.broker.message.Message;
+import de.redstonecloud.api.redis.broker.packet.defaults.template.BestTemplateResultPacket;
+import de.redstonecloud.api.redis.broker.packet.defaults.template.GetBestTemplatePacket;
 import de.redstonecloud.bridge.cloudinterface.CloudInterface;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;
 import dev.waterdog.waterdogpe.ProxyServer;
@@ -17,7 +15,6 @@ import jline.internal.Nullable;
 import lombok.NonNull;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class WDPEHandler implements IForcedHostHandler, IReconnectHandler, IJoinHandler {
@@ -58,9 +55,8 @@ public class WDPEHandler implements IForcedHostHandler, IReconnectHandler, IJoin
         if(!CloudInterface.getBridgeConfig().has("hub_template")) return null;
         CompletableFuture<String> name = new CompletableFuture<>();
 
-        CloudInterface.getNetty().sendPacket(new GetBestTemplatePacket(CloudInterface.getBridgeConfig().get("hub_template").getAsString()), (response) -> {
-            name.complete(response.getServer());
-        }, BestTemplateResultPacket.class);
+        new GetBestTemplatePacket(CloudInterface.getBridgeConfig().get("hub_template").getAsString())
+                .send(BestTemplateResultPacket.class, response -> name.complete(response.getServer()));
 
         try {
             BridgeServer srv = CloudInterface.getExecutor().determineServer(name.completeOnTimeout("", 1, TimeUnit.SECONDS).get().toUpperCase());

@@ -2,27 +2,22 @@ package de.redstonecloud.bridge.cloudinterface;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import de.pierreschwang.nettypacket.event.EventRegistry;
-import de.redstonecloud.api.components.ICloudPlayer;
 import de.redstonecloud.api.components.ServerActions;
 import de.redstonecloud.api.components.ServerStatus;
-import de.redstonecloud.api.netty.NettyHelper;
-import de.redstonecloud.api.netty.client.NettyClient;
-import de.redstonecloud.api.netty.packet.communication.ClientAuthPacket;
-import de.redstonecloud.api.netty.packet.player.PlayerConnectPacket;
-import de.redstonecloud.api.netty.packet.player.PlayerDisconnectPacket;
-import de.redstonecloud.api.netty.packet.server.ServerActionRequest;
-import de.redstonecloud.api.netty.packet.server.ServerChangeStatusPacket;
 import de.redstonecloud.api.redis.broker.Broker;
+import de.redstonecloud.api.redis.broker.BrokerHelper;
+import de.redstonecloud.api.redis.broker.packet.defaults.communication.ClientAuthPacket;
+import de.redstonecloud.api.redis.broker.packet.defaults.player.PlayerConnectPacket;
+import de.redstonecloud.api.redis.broker.packet.defaults.player.PlayerDisconnectPacket;
+import de.redstonecloud.api.redis.broker.packet.defaults.server.ServerActionPacket;
+import de.redstonecloud.api.redis.broker.packet.defaults.server.ServerChangeStatusPacket;
 import de.redstonecloud.api.redis.cache.Cache;
-import de.redstonecloud.bridge.cloudinterface.broker.BrokerHandler;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeExecutor;
 import de.redstonecloud.bridge.cloudinterface.components.BridgePlayer;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;
-import de.redstonecloud.bridge.cloudinterface.netty.ActionHandler;
-import de.redstonecloud.bridge.cloudinterface.netty.ProxyHandler;
+import de.redstonecloud.bridge.cloudinterface.redis.broker.ActionHandler;
+import de.redstonecloud.bridge.cloudinterface.redis.broker.ProxyHandler;
 import lombok.Getter;
-import org.json.JSONObject;
 
 import java.io.File;
 
@@ -35,8 +30,6 @@ public class CloudInterface {
 
     @Getter
     public static Cache cache;
-    @Getter
-    public static NettyClient netty;
     @Getter
     public static Broker broker;
     public static boolean proxy;
@@ -78,11 +71,9 @@ public class CloudInterface {
         result[0] = "*";  // First element is always "*"
         result[result.length - 1] = serverName;
 
-        broker = new Broker(serverName, result);
+        broker = new Broker(serverName, BrokerHelper.constructRegistry(), result);
 
         currentServerStartup = BridgeServer.readFromCache(serverName.toUpperCase());
-        netty = new NettyClient(currentServerStartup.getName().toUpperCase(), NettyHelper.constructRegistry(), new EventRegistry());
-        netty.setPort(Integer.valueOf(System.getenv("NETTY_PORT"))).bind();
 
         proxy = currentServerStartup.isProxy();
 
@@ -90,17 +81,15 @@ public class CloudInterface {
 
     public void start(BridgeExecutor executorPlugin) {
         executor = executorPlugin;
-        broker.listen(serverName, BrokerHandler::handle);
+        // broker.listen(serverName, BrokerHandler::handle);
 
-        if(proxy) netty.getEventRegistry().registerEvents(new ProxyHandler(netty));
-        netty.getEventRegistry().registerEvents(new ActionHandler(netty));
+        if(proxy) broker.listen("", ProxyHandler::handle);
+        broker.listen("", ActionHandler::handle);
 
-        executorPlugin.runDelayed(() -> {
-            ClientAuthPacket packet = new ClientAuthPacket();
-            packet.setClientId(currentServerStartup.getName().toUpperCase());
-
-            netty.sendPacket(packet);
-        }, 20);
+        executorPlugin.runDelayed(() -> new ClientAuthPacket()
+                .setClientId(currentServerStartup.getName().toUpperCase())
+                .setTo("cloud")
+                .send(), 20);
     }
 
     public void shutdown() {
@@ -108,76 +97,102 @@ public class CloudInterface {
     }
 
     public void playerLogin(String name, String uuid, String ip) {
-        PlayerConnectPacket pck = new PlayerConnectPacket()
+        new PlayerConnectPacket()
                 .setPlayerName(name)
                 .setUuid(uuid)
                 .setIpAddress(ip)
-                .setServer(currentServerStartup.getName().toUpperCase());
-
-        netty.sendPacket(pck);
+                .setServer(currentServerStartup.getName().toUpperCase())
+                .setTo("cloud")
+                .send();
     }
 
     public void playerDisconnect(String uuid) {
-        PlayerDisconnectPacket pck = new PlayerDisconnectPacket()
+        new PlayerDisconnectPacket()
                 .setUuid(uuid)
-                .setServer(currentServerStartup.getName().toUpperCase());
-
-        netty.sendPacket(pck);
+                .setServer(currentServerStartup.getName().toUpperCase())
+                .setTo("cloud")
+                .send();
     }
 
     public void sendMessage(BridgePlayer pl, String message) {
-        netty.sendPacket(new ServerActionRequest()
+        JsonObject extraData = new JsonObject();
+        extraData.addProperty("message", message);
+
+        new ServerActionPacket()
                 .setAction(ServerActions.PLAYER_SEND_MESSAGE.name())
-                .setServer(pl.getConnectedNetwork().getName())
                 .setPlayerUuid(pl.getUUID())
-                .setExtraData(new JSONObject().put("message", message)));
+                .setExtraData(extraData)
+                .setTo(pl.getConnectedNetwork().getName())
+                .send();
     }
 
     public void sendActionBar(BridgePlayer pl, String message) {
-        netty.sendPacket(new ServerActionRequest()
+        JsonObject extraData = new JsonObject();
+        extraData.addProperty("message", message);
+
+        new ServerActionPacket()
                 .setAction(ServerActions.PLAYER_ACTIONBAR.name())
-                .setServer(pl.getConnectedNetwork().getName())
                 .setPlayerUuid(pl.getUUID())
-                .setExtraData(new JSONObject().put("message", message)));
+                .setExtraData(extraData)
+                .setTo(pl.getConnectedNetwork().getName())
+                .send();
     }
 
     public void sendTitle(BridgePlayer pl, String title) {
-        netty.sendPacket(new ServerActionRequest()
+        JsonObject extraData = new JsonObject();
+        extraData.addProperty("title", title);
+
+        new ServerActionPacket()
                 .setAction(ServerActions.PLAYER_SEND_TITLE.name())
-                .setServer(pl.getConnectedNetwork().getName())
                 .setPlayerUuid(pl.getUUID())
-                .setExtraData(new JSONObject().put("title", title)));
+                .setExtraData(extraData)
+                .setTo(pl.getConnectedNetwork().getName())
+                .send();
     }
 
     public void sendToast(BridgePlayer pl, String title, String content) {
-        netty.sendPacket(new ServerActionRequest()
+        JsonObject extraData = new JsonObject();
+        extraData.addProperty("title", title);
+        extraData.addProperty("content", content);
+
+        new ServerActionPacket()
                 .setAction(ServerActions.PLAYER_TOAST.name())
-                .setServer(pl.getConnectedNetwork().getName())
                 .setPlayerUuid(pl.getUUID())
-                .setExtraData(new JSONObject().put("title", title).put("content", content)));
+                .setExtraData(extraData)
+                .setTo(pl.getConnectedNetwork().getName())
+                .send();
     }
 
     public void connect(BridgePlayer pl, String server) {
-        netty.sendPacket(new ServerActionRequest()
+        JsonObject extraData = new JsonObject();
+        extraData.addProperty("server", server);
+
+        new ServerActionPacket()
                 .setAction(ServerActions.PLAYER_CONNECT.name())
-                .setServer(pl.getConnectedNetwork().getName())
                 .setPlayerUuid(pl.getUUID())
-                .setExtraData(new JSONObject().put("server", server)));
+                .setExtraData(extraData)
+                .setTo(pl.getConnectedNetwork().getName())
+                .send();
     }
 
     public void kick(BridgePlayer pl, String reason) {
-        netty.sendPacket(new ServerActionRequest()
+        JsonObject extraData = new JsonObject();
+        extraData.addProperty("reason", reason);
+
+        new ServerActionPacket()
                 .setAction(ServerActions.PLAYER_KICK.name())
-                .setServer(pl.getConnectedNetwork().getName())
                 .setPlayerUuid(pl.getUUID())
-                .setExtraData(new JSONObject().put("reason", reason)));
+                .setExtraData(extraData)
+                .setTo(pl.getConnectedNetwork().getName())
+                .send();
     }
 
     public void changeStatus(String server, ServerStatus newStatus) {
-        netty.sendPacket(new ServerChangeStatusPacket()
+        new ServerChangeStatusPacket()
                 .setServer(server)
                 .setNewStatus(newStatus.name())
-        );
+                .setTo("cloud")
+                .send();
     }
 
     public void changeStatus(ServerStatus newStatus) {

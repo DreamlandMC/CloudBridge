@@ -56,6 +56,7 @@ public class WDPEHandler implements IForcedHostHandler, IReconnectHandler, IJoin
         CompletableFuture<String> name = new CompletableFuture<>();
 
         new GetBestTemplatePacket(CloudInterface.getBridgeConfig().get("hub_template").getAsString())
+                .setTo("cloud")
                 .send(BestTemplateResultPacket.class, response -> name.complete(response.getServer()));
 
         try {

@@ -6,6 +6,7 @@ import de.redstonecloud.bridge.cloudinterface.components.BridgeExecutor;
 import de.redstonecloud.bridge.cloudinterface.components.BridgeServer;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.network.serverinfo.BedrockServerInfo;
+import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 import dev.waterdog.waterdogpe.scheduler.Task;
 
@@ -28,22 +29,28 @@ public class WDPEExecutor implements BridgeExecutor {
         return server.getServerInfo(name) != null;
     }
 
+    public boolean hasSameServer(BridgeServer srv) {
+        ServerInfo si = server.getServerInfo(srv.getName());
+        if(si == null) return false;
+        return si.getAddress().getPort() == srv.getPort();
+    }
+
     @Override
     public BridgeServer determineServer(String serverName) {
-        System.out.println("Determining server " + serverName);
         BridgeServer server = BridgeServer.readFromCache(serverName.toUpperCase());
         if(server == null) {
             if(hasServer(serverName)) removeServer(serverName);
             return null;
         }
 
-        if(!hasServer(server.getName())) addServer(server.getName(), server.getAddress());
+        if(!hasServer(server.getName()) || !hasSameServer(server)) addServer(server.getName(), server.getAddress());
 
         return server;
     }
 
     @Override
     public void connect(ICloudPlayer player, String serverName) {
+        determineServer(serverName);
         getPlayerByCloudPlayer(player).connect(server.getServerInfo(serverName));
     }
 

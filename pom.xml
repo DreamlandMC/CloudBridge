@@ -61,10 +61,18 @@
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.RedstoneCloud.RedstoneCloud</groupId>
             <artifactId>api</artifactId>
             <version>main-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>de.redstonecloud</groupId>
+            <artifactId>api</artifactId>
+            <version>0.1-beta</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -84,6 +92,9 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                    </transformers>
                     <outputFile>target\${project.artifactId}-${project.version}-shaded.jar</outputFile>
                 </configuration>
             </plugin>

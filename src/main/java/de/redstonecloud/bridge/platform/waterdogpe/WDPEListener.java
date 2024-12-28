@@ -9,12 +9,12 @@ public class WDPEListener {
     public static void onLogin(PlayerLoginEvent ev) {
         ProxiedPlayer player = ev.getPlayer();
 
-        CloudInterface.getInstance().playerLogin(player.getName(), player.getUniqueId().toString(), player.getAddress().getHostName());
+        if(!ev.isCancelled()) CloudInterface.getInstance().playerLogin(player.getName(), player.getUniqueId().toString(), player.getAddress().getHostName());
+        if(ev.isCancelled()) CloudInterface.getInstance().playerDisconnect(player.getUniqueId().toString());
     }
 
     public static void onDisconnect(PlayerDisconnectedEvent ev) {
         ProxiedPlayer player = ev.getPlayer();
-
         CloudInterface.getInstance().playerDisconnect(player.getUniqueId().toString());
     }
 }

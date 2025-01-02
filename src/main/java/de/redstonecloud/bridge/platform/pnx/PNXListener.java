@@ -6,8 +6,6 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import de.redstonecloud.bridge.cloudinterface.CloudInterface;
-import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectedEvent;
-import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 public class PNXListener implements Listener {
     @EventHandler

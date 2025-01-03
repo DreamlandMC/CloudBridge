@@ -1,0 +1,6 @@
+{
+  "entrance": "de.redstonecloud.bridge.platform.allay.AllayPlugin",
+  "name": "CloudBridge",
+  "authors": ["RedstoneCloud"],
+  "version": "1.0"
+}

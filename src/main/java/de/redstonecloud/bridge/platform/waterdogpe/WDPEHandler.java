@@ -60,7 +60,7 @@ public class WDPEHandler implements IForcedHostHandler, IReconnectHandler, IJoin
                 .send(BestTemplateResultPacket.class, response -> name.complete(response.getServer()));
 
         try {
-            BridgeServer srv = CloudInterface.getExecutor().determineServer(name.completeOnTimeout("", 1, TimeUnit.SECONDS).get().toUpperCase());
+            BridgeServer srv = CloudInterface.getExecutor().determineServer(name.completeOnTimeout("", 3, TimeUnit.SECONDS).get().toUpperCase());
             return ProxyServer.getInstance().getServerInfo(srv.getName());
         } catch (Exception e) {
             return null;

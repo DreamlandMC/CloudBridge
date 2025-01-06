@@ -12,6 +12,12 @@ CloudBridge is an essential component for linking your Minecraft server to Redst
 * Supports a wide range of server software for maximum compatibility.
 * Easily extensible to support additional server software.
 
+### Currently supported softwares:
+- [WaterdogPE](https://github.com/WaterdogPE/WaterdogPE)
+- [PowerNukkitX](https://github.com/PowerNukkitX/PowerNukkitX)
+- [Nukkit](https://github.com/CloudburstMC/Nukkit)
+- [Allay](https://github.com/AllayMC/Allay) *partially*
+
 ## 🚀 Getting Started
 
 To set up CloudBridge on your server, follow these steps:

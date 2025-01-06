@@ -33,7 +33,7 @@ public class BridgePlayer implements ICloudPlayer {
                 .address(HostAndPort.fromString(json.get("address").getAsString()))
                 .network(BridgeServer.readFromCache(json.get("network").getAsString()))
                 .server(BridgeServer.readFromCache(json.get("server").getAsString()))
-                .customData(new JsonParser().parse(json.get("customData").getAsString()))
+                .customData(JsonParser.parseString(json.get("customData").getAsString()))
                 .build();
 
         return server;

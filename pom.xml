@@ -16,6 +16,7 @@
         <version.allay>0.1.2</version.allay>
         <version.waterdogpe>2.0.3-SNAPSHOT</version.waterdogpe>
         <version.powernukkitx>master-SNAPSHOT</version.powernukkitx>
+        <version.nukkit>1.0-SNAPSHOT</version.nukkit>
     </properties>
 
     <repositories>
@@ -57,7 +58,7 @@
             <groupId>com.github.PowerNukkitX</groupId>
             <artifactId>PowerNukkitX</artifactId>
             <version>${version.powernukkitx}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.cloudburstmc.netty</groupId>
@@ -74,29 +75,38 @@
             <groupId>dev.waterdog.waterdogpe</groupId>
             <artifactId>waterdog</artifactId>
             <version>${version.waterdogpe}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.AllayMC.Allay</groupId>
             <artifactId>api</artifactId>
             <version>${version.allay}</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
+            <groupId>cn.nukkit</groupId>
+            <artifactId>nukkit</artifactId>
+            <version>${version.nukkit}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.RedstoneCloud.RedstoneCloud</groupId>
             <artifactId>api</artifactId>
             <version>main-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        -->
 
+<!--
         <dependency>
             <groupId>de.redstonecloud</groupId>
             <artifactId>api</artifactId>
             <version>0.1-beta</version>
             <scope>compile</scope>
         </dependency>
+-->
     </dependencies>
 
     <build>

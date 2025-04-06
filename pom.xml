@@ -44,7 +44,18 @@
             <id>okaeri</id>
             <url>https://storehouse.okaeri.eu/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>lpmc-redstonecloud</id>
+            <url>https://repo.lostplacemc.eu/redstonecloud</url>
+        </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>lpmc-redstonecloud</id>
+            <url>https://repo.lostplacemc.eu/redstonecloud</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>

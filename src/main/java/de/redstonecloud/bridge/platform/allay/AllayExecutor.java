@@ -16,7 +16,8 @@ public class AllayExecutor implements BridgeExecutor {
     private static Server server = Server.getInstance();
 
     public EntityPlayer getPlayerByCloudPlayer(ICloudPlayer player) {
-        return server.getOnlinePlayers().get(UUID.fromString(player.getUUID()));
+        //return server.getOnlinePlayers().get(UUID.fromString(player.getUUID()));
+        return null;
     }
 
     public void sendMessage(ICloudPlayer cloudPlayer, String message) {

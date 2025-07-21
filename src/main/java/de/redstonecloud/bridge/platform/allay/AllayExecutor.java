@@ -25,7 +25,7 @@ public class AllayExecutor implements BridgeExecutor {
 
     @Override
     public void sendTitle(ICloudPlayer cloudPlayer, String title) {
-        getPlayerByCloudPlayer(cloudPlayer).sendTitle(title);
+        Objects.requireNonNull(getPlayerByCloudPlayer(cloudPlayer)).sendTitle(title);
     }
 
     @Override
@@ -40,12 +40,12 @@ public class AllayExecutor implements BridgeExecutor {
 
     @Override
     public void sendActionbar(ICloudPlayer player, String message) {
-        getPlayerByCloudPlayer(player).sendActionBar(message);
+        Objects.requireNonNull(getPlayerByCloudPlayer(player)).sendActionBar(message);
     }
 
     @Override
     public void sendToast(ICloudPlayer player, String title, String message) {
-        getPlayerByCloudPlayer(player).sendToast(title, message);
+        Objects.requireNonNull(getPlayerByCloudPlayer(player)).sendToast(title, message);
     }
 
     @Override

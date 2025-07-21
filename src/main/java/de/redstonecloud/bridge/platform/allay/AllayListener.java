@@ -11,13 +11,13 @@ public class AllayListener {
     public void onLogin(PlayerLoginEvent ev) {
         EntityPlayer player = ev.getPlayer();
 
-        CloudInterface.getInstance().playerLogin(player.getOriginName(), player.getUUID().toString(), player.getClientSession().getSocketAddress().toString());
+        CloudInterface.getInstance().playerLogin(player.getOriginName(), player.getLoginData().getUuid().toString(), player.getClientSession().getSocketAddress().toString());
     }
 
     @EventHandler
     public void onDisconnect(PlayerQuitEvent ev) {
         EntityPlayer player = ev.getPlayer();
 
-        CloudInterface.getInstance().playerDisconnect(player.getUUID().toString());
+        CloudInterface.getInstance().playerDisconnect(player.getLoginData().getUuid().toString());
     }
 }

@@ -16,8 +16,7 @@ public class AllayExecutor implements BridgeExecutor {
     private static Server server = Server.getInstance();
 
     public EntityPlayer getPlayerByCloudPlayer(ICloudPlayer player) {
-        //return server.getOnlinePlayers().get(UUID.fromString(player.getUUID()));
-        return null;
+        return server.getPlayerService().getPlayers().get(UUID.fromString(player.getUUID()));
     }
 
     public void sendMessage(ICloudPlayer cloudPlayer, String message) {
@@ -26,8 +25,7 @@ public class AllayExecutor implements BridgeExecutor {
 
     @Override
     public void sendTitle(ICloudPlayer cloudPlayer, String title) {
-        // title not implemented yet
-        //getPlayerByCloudPlayer(cloudPlayer).sendTitle(title);
+        Objects.requireNonNull(getPlayerByCloudPlayer(cloudPlayer)).sendTitle(title);
     }
 
     @Override
@@ -42,14 +40,12 @@ public class AllayExecutor implements BridgeExecutor {
 
     @Override
     public void sendActionbar(ICloudPlayer player, String message) {
-        // actionbar not implemented yet
-        getPlayerByCloudPlayer(player).sendPopup(message);
+        Objects.requireNonNull(getPlayerByCloudPlayer(player)).sendActionBar(message);
     }
 
     @Override
     public void sendToast(ICloudPlayer player, String title, String message) {
-        // toasts not implemented yet
-        //getPlayerByCloudPlayer(player).sendToast(title, message);
+        Objects.requireNonNull(getPlayerByCloudPlayer(player)).sendToast(title, message);
     }
 
     @Override

@@ -90,7 +90,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.AllayMC.Allay</groupId>
+            <groupId>org.allaymc.allay</groupId>
             <artifactId>api</artifactId>
             <version>${version.allay}</version>
             <scope>provided</scope>
